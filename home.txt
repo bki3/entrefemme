@@ -1,0 +1,270 @@
+return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-blue-900 text-white">
+        <div className="flex items-center justify-between px-6 py-3">
+          <div className="flex items-center space-x-6">
+            <h1 className="text-xl font-semibold">Home</h1>
+            <div className="flex items-center space-x-1">
+              <span>Reports</span>
+              <ChevronDown className="w-4 h-4" />
+            </div>
+          </div>
+          <div className="flex items-center space-x-6 text-sm">
+            <a href="#" className="hover:underline">Disputes and Refunds</a>
+            <a href="#" className="hover:underline">Account Management</a>
+            <div className="flex items-center space-x-1">
+              <span>Help</span>
+              <ChevronDown className="w-4 h-4" />
+            </div>
+            <a href="#" className="hover:underline">Logout</a>
+          </div>
+        </div>
+      </header>
+
+      {/* Breadcrumb */}
+      <div className="bg-white border-b px-6 py-3 text-sm">
+        <span className="text-blue-600">USPS Ship</span>
+        <span className="mx-2">|</span>
+        <span className="text-blue-600">Reports</span>
+        <span className="mx-2">|</span>
+        <span className="text-blue-600 underline">Account Search</span>
+        <span className="ml-2">⬇</span>
+      </div>
+
+      {/* Search Form */}
+      <div className="bg-white mx-6 mt-6 p-6 rounded shadow-sm">
+        <div className="grid grid-cols-2 gap-6 mb-4">
+          <div className="flex items-center gap-3">
+            <label className="text-sm font-medium whitespace-nowrap w-24">Mailer Name:</label>
+            <input 
+              type="text" 
+              placeholder="Mailer Name"
+              className="flex-1 border border-gray-300 rounded px-3 py-1.5 text-sm"
+              value={searchParams.mailerName}
+              onChange={(e) => setSearchParams({...searchParams, mailerName: e.target.value})}
+            />
+          </div>
+          <div className="flex items-center gap-3">
+            <label className="text-sm font-medium whitespace-nowrap w-24">Permit #:</label>
+            <input 
+              type="text" 
+              placeholder="Permit #"
+              className="flex-1 border border-gray-300 rounded px-3 py-1.5 text-sm"
+              value={searchParams.permitNo}
+              onChange={(e) => setSearchParams({...searchParams, permitNo: e.target.value})}
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-6 mb-4">
+          <div className="flex items-center gap-3">
+            <label className="text-sm font-medium whitespace-nowrap w-24">EPA:</label>
+            <input 
+              type="text" 
+              placeholder="EPA"
+              className="flex-1 border border-gray-300 rounded px-3 py-1.5 text-sm"
+              value={searchParams.epa}
+              onChange={(e) => setSearchParams({...searchParams, epa: e.target.value})}
+            />
+          </div>
+          <div className="flex items-center gap-3">
+            <label className="text-sm font-medium whitespace-nowrap w-24">Month</label>
+            <select 
+              className="flex-1 border border-gray-300 rounded px-3 py-1.5 text-sm"
+              value={searchParams.month}
+              onChange={(e) => setSearchParams({...searchParams, month: e.target.value})}
+            >
+              <option>January</option>
+              <option>February</option>
+              <option>March</option>
+              <option>April</option>
+              <option>May</option>
+              <option>June</option>
+              <option>July</option>
+              <option>August</option>
+              <option>September</option>
+              <option>October</option>
+              <option>November</option>
+              <option>December</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-6 mb-4">
+          <div className="flex items-center gap-3">
+            <label className="text-sm font-medium whitespace-nowrap w-24">Mailer ID:</label>
+            <input 
+              type="text" 
+              placeholder="Mailer ID"
+              className="flex-1 border border-gray-300 rounded px-3 py-1.5 text-sm"
+              value={searchParams.mailerId}
+              onChange={(e) => setSearchParams({...searchParams, mailerId: e.target.value})}
+            />
+          </div>
+          <div className="flex items-center gap-3">
+            <label className="text-sm font-medium whitespace-nowrap w-24">CRID:</label>
+            <input 
+              type="text" 
+              placeholder="CRID"
+              className="flex-1 border border-gray-300 rounded px-3 py-1.5 text-sm"
+              value={searchParams.crid}
+              onChange={(e) => setSearchParams({...searchParams, crid: e.target.value})}
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-6 mb-4">
+          <div></div>
+          <div className="flex items-center gap-3">
+            <label className="text-sm font-medium whitespace-nowrap w-24">Year</label>
+            <select 
+              className="flex-1 border border-gray-300 rounded px-3 py-1.5 text-sm"
+              value={searchParams.year}
+              onChange={(e) => setSearchParams({...searchParams, year: e.target.value})}
+            >
+              <option>2026</option>
+              <option>2025</option>
+              <option>2024</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-6 mb-4">
+          <div className="flex items-center gap-3">
+            <label className="text-sm font-medium whitespace-nowrap w-24">Status:</label>
+            <div className="flex items-center space-x-4">
+              <label className="flex items-center">
+                <input 
+                  type="checkbox" 
+                  checked={searchParams.status.live}
+                  onChange={(e) => setSearchParams({...searchParams, status: {...searchParams.status, live: e.target.checked}})}
+                  className="mr-1.5"
+                />
+                <span className="text-sm">Live</span>
+              </label>
+              <label className="flex items-center">
+                <input 
+                  type="checkbox"
+                  checked={searchParams.status.pilot}
+                  onChange={(e) => setSearchParams({...searchParams, status: {...searchParams.status, pilot: e.target.checked}})}
+                  className="mr-1.5"
+                />
+                <span className="text-sm">Pilot</span>
+              </label>
+            </div>
+          </div>
+          <div className="flex items-center justify-end">
+            <button className="bg-gray-200 hover:bg-gray-300 px-6 py-1.5 rounded text-sm font-medium border border-gray-400">
+              Search
+            </button>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <label className="text-sm font-medium whitespace-nowrap w-24">Type:</label>
+          <div className="flex items-center space-x-4">
+            <label className="flex items-center">
+              <input 
+                type="checkbox"
+                checked={searchParams.type.outbound}
+                onChange={(e) => setSearchParams({...searchParams, type: {...searchParams.type, outbound: e.target.checked}})}
+                className="mr-1.5"
+              />
+              <span className="text-sm">Outbound</span>
+            </label>
+            <label className="flex items-center">
+              <input 
+                type="checkbox"
+                checked={searchParams.type.pfs}
+                onChange={(e) => setSearchParams({...searchParams, type: {...searchParams.type, pfs: e.target.checked}})}
+                className="mr-1.5"
+              />
+              <span className="text-sm">PFS</span>
+            </label>
+            <label className="flex items-center">
+              <input 
+                type="checkbox"
+                checked={searchParams.type.returns}
+                onChange={(e) => setSearchParams({...searchParams, type: {...searchParams.type, returns: e.target.checked}})}
+                className="mr-1.5"
+              />
+              <span className="text-sm">Returns</span>
+            </label>
+            <label className="flex items-center">
+              <input 
+                type="checkbox"
+                checked={searchParams.type.prs}
+                onChange={(e) => setSearchParams({...searchParams, type: {...searchParams.type, prs: e.target.checked}})}
+                className="mr-1.5"
+              />
+              <span className="text-sm">PRS</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      {/* Results Table */}
+      <div className="mx-6 mt-6 mb-6">
+        <div className="bg-white rounded shadow-sm">
+          <div className="px-6 py-3 border-b">
+            <span className="text-sm font-medium">Download Results: </span>
+            <a href="#" className="text-blue-600 underline text-sm ml-2">CSV</a>
+            <span className="mx-2 text-sm">|</span>
+            <a href="#" className="text-blue-600 underline text-sm">Excel</a>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-100 border-b">
+                <tr>
+                  <th className="px-4 py-2 text-left font-medium">Mailer Name</th>
+                  <th className="px-4 py-2 text-left font-medium">CRID</th>
+                  <th className="px-4 py-2 text-left font-medium">Master MID</th>
+                  <th className="px-4 py-2 text-left font-medium">EPA Account #</th>
+                  <th className="px-4 py-2 text-left font-medium">Type</th>
+                  <th className="px-4 py-2 text-left font-medium">Status</th>
+                  <th className="px-4 py-2 text-left font-medium">Manifested Pieces</th>
+                  <th className="px-4 py-2 text-left font-medium">Last Manifest Date</th>
+                  <th className="px-4 py-2 text-left font-medium">Transmission Date</th>
+                  <th className="px-4 py-2 text-left font-medium">Sampled Pieces</th>
+                  <th className="px-4 py-2 text-left font-medium">SOA</th>
+                  <th className="px-4 py-2 text-left font-medium">Census Pieces</th>
+                  <th className="px-4 py-2 text-left font-medium">Unmanifested Pieces</th>
+                  <th className="px-4 py-2 text-left font-medium">Duplicate Pieces</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sampleData.map((row, idx) => (
+                  <tr key={idx} className="border-b hover:bg-gray-50">
+                    <td className="px-4 py-2">
+                      <a href="#" className="text-blue-600 underline">{row.name}</a>
+                    </td>
+                    <td className="px-4 py-2">{row.crid}</td>
+                    <td className="px-4 py-2">{row.masterMid}</td>
+                    <td className="px-4 py-2">{row.epa}</td>
+                    <td className="px-4 py-2">{row.type}</td>
+                    <td className="px-4 py-2">{row.status}</td>
+                    <td className="px-4 py-2 text-center">
+                      <a href="#" className="text-blue-600 underline">{row.manifested}</a>
+                    </td>
+                    <td className="px-4 py-2">{row.lastManifest}</td>
+                    <td className="px-4 py-2">{row.transmission}</td>
+                    <td className="px-4 py-2 text-center">{row.sampled}</td>
+                    <td className="px-4 py-2 text-center">{row.soa}</td>
+                    <td className="px-4 py-2 text-center">{row.census}</td>
+                    <td className="px-4 py-2 text-center">{row.unmanifested}</td>
+                    <td className="px-4 py-2 text-center">{row.duplicate}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="px-6 py-3 border-t text-sm text-gray-600">
+            Showing 1 to 21 of 21 entries
+          </div>
+        </div>
+      </div>
+    </div>
+  );

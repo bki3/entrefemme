@@ -1,0 +1,251 @@
+// Monthly Account Summary Page
+const MonthlyAccountSummaryPage = ({ mailerData }) => {
+  const [activeTab, setActiveTab] = useState('accountSummary');
+
+  const accountSummaryData = [
+    { label: 'Manifest postage from mailer\'s files', pieces: '2', postage: '$7.64', link: true },
+    { label: 'Manifest variance postage from USPS recalculation', pieces: '2', postage: '$57.64', link: true },
+    { label: 'Total manifest postage', pieces: '2', postage: '$65.28' },
+    { label: 'USPS Ground Advantage', pieces: '2', postage: '$65.28', indent: true },
+    { label: 'Manifest postage paid', pieces: '2', postage: '$65.28' }
+  ];
+
+  const additionalPostageData = [
+    { label: 'Postage adjustment from Census', pieces: '0', postage: '$0.00', link: true },
+    { label: 'Postage adjustment from Unmanifested', pieces: '0', postage: '$0.00', link: true },
+    { label: 'Postage adjustment from Duplicates', pieces: '0', postage: '$0.00', link: true },
+    { label: 'Package Quality Noncompliance Adjustment', pieces: '0', postage: '$0.00', link: true },
+    { label: 'SOA Adjustment', pieces: '0', postage: '$0.00', link: true },
+    { label: 'Total additional postage due', pieces: '0', postage: '$0.00' }
+  ];
+
+  const recordsData = [
+    { label: 'Census Pieces', pieces: '0', link: true },
+    { label: 'Manifested Pieces', pieces: '2', link: true },
+    { label: 'Unmanifested Pieces', pieces: '0', link: true },
+    { label: 'Duplicates', pieces: '0', link: true },
+    { label: 'Package Quality Noncompliance', pieces: '0', link: true },
+    { label: 'SOA', pieces: '0', link: true },
+    { label: 'Total Pieces', pieces: '2' }
+  ];
+
+  const adjustmentData = [
+    { type: 'Census Adjustment', pieces: '0', proposed: '$0.00', actual: '$0.00' },
+    { type: 'Unmanifested Adjustment', pieces: '0', proposed: '$0.00', actual: '$0.00' },
+    { type: 'Duplicates Adjustment', pieces: '0', proposed: '$0.00', actual: '$0.00' },
+    { type: 'Package Quality Noncompliance Adjustment', pieces: '0', proposed: '$0.00', actual: '$0.00' },
+    { type: 'SOA Adjustment', pieces: '0', proposed: '$0.00', actual: '$0.00' },
+    { type: 'Total Adjustments', pieces: '0', proposed: '$0.00', actual: '$0.00' }
+  ];
+
+  return (
+    <div className="bg-gray-100 min-h-screen">
+      <div className="bg-white border-b border-gray-300 px-6 py-2">
+        <h1 className="text-sm">
+          USPS Ship | Reports | <span className="text-blue-600 underline cursor-pointer">Account Information</span>
+        </h1>
+      </div>
+
+      <div className="p-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-4 mb-4">
+          <div className="bg-gray-200 border border-gray-400 p-4">
+            <div className="grid grid-cols-2 gap-x-8 gap-y-1 text-xs">
+              <div><span className="font-medium">CRID:</span> 20429125</div>
+              <div><span className="font-medium">APPLE</span></div>
+              <div><span className="font-medium">Master Mailer ID:</span> 100090</div>
+              <div>12730 FAIR LAKES CIR</div>
+              <div><span className="font-medium">EPA:</span> 1000012853</div>
+              <div>FAIRFAX, VA 22033-4901</div>
+            </div>
+          </div>
+
+          <div className="bg-gray-200 border border-gray-400 p-4 flex flex-col gap-3">
+            <div>
+              <label className="block text-xs font-medium mb-1">Month</label>
+              <select className="w-full px-2 py-1 border border-gray-400 bg-white text-xs">
+                <option>December</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-medium mb-1">Year</label>
+              <select className="w-full px-2 py-1 border border-gray-400 bg-white text-xs">
+                <option>2025</option>
+              </select>
+            </div>
+            <button className="w-full bg-gray-600 hover:bg-gray-700 text-white px-4 py-1.5 text-xs font-medium mt-auto">
+              Search
+            </button>
+          </div>
+        </div>
+
+        <div className="flex gap-2 mb-4">
+          <button
+            onClick={() => setActiveTab('accountSummary')}
+            className={`px-6 py-2 text-xs font-medium ${
+              activeTab === 'accountSummary' ? 'bg-indigo-900 text-white' : 'bg-gray-300 text-gray-700'
+            }`}
+          >
+            Monthly Account Summary
+          </button>
+          <button
+            onClick={() => setActiveTab('samplingSummary')}
+            className={`px-6 py-2 text-xs font-medium ${
+              activeTab === 'samplingSummary' ? 'bg-indigo-900 text-white' : 'bg-gray-300 text-gray-700'
+            }`}
+          >
+            Monthly Sampling Summary
+          </button>
+          <button
+            onClick={() => setActiveTab('adjustmentSummary')}
+            className={`px-6 py-2 text-xs font-medium ${
+              activeTab === 'adjustmentSummary' ? 'bg-indigo-900 text-white' : 'bg-gray-300 text-gray-700'
+            }`}
+          >
+            Monthly Adjustment Summary
+          </button>
+        </div>
+
+        {activeTab === 'accountSummary' && (
+          <div className="bg-white border border-gray-400 p-4">
+            <h2 className="text-sm font-semibold mb-3">Total Postage Calculation</h2>
+            
+            <h3 className="text-xs font-semibold mb-2">1. Manifest Postage</h3>
+            <table className="w-full text-xs mb-4">
+              <thead>
+                <tr className="bg-gray-200">
+                  <th className="text-left px-2 py-1"></th>
+                  <th className="text-center px-2 py-1">Pieces</th>
+                  <th className="text-right px-2 py-1">Postage</th>
+                </tr>
+              </thead>
+              <tbody>
+                {accountSummaryData.map((item, idx) => (
+                  <tr key={idx} className={idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                    <td className={`px-2 py-1 ${item.indent ? 'pl-8' : ''}`}>
+                      {item.link ? <span className="text-blue-600 underline cursor-pointer">{item.label}</span> : item.label}
+                    </td>
+                    <td className="text-center px-2 py-1">{item.pieces}</td>
+                    <td className="text-right px-2 py-1">{item.postage}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <h3 className="text-xs font-semibold mb-2">2. Additional Postage Due:</h3>
+            <table className="w-full text-xs mb-4">
+              <tbody>
+                {additionalPostageData.map((item, idx) => (
+                  <tr key={idx} className={idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                    <td className="px-2 py-1">
+                      {item.link ? <span className="text-blue-600 underline cursor-pointer">{item.label}</span> : item.label}
+                    </td>
+                    <td className="text-center px-2 py-1">{item.pieces}</td>
+                    <td className="text-right px-2 py-1">{item.postage}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <h3 className="text-xs font-semibold mb-2">3. Total Postage</h3>
+            <table className="w-full text-xs mb-4">
+              <tbody>
+                <tr className="bg-gray-50">
+                  <td className="px-2 py-1"></td>
+                  <td className="text-center px-2 py-1">2</td>
+                  <td className="text-right px-2 py-1">$65.28</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h3 className="text-xs font-semibold mb-2">Records</h3>
+            <table className="w-full text-xs">
+              <tbody>
+                {recordsData.map((item, idx) => (
+                  <tr key={idx} className={idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                    <td className="px-2 py-1">
+                      {item.link ? <span className="text-blue-600 underline cursor-pointer">{item.label}</span> : item.label}
+                    </td>
+                    <td className="text-center px-2 py-1">{item.pieces}</td>
+                    <td className="text-right px-2 py-1"></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {activeTab === 'samplingSummary' && (
+          <div className="bg-white border border-gray-400 p-4">
+            <div className="text-xs mb-4">
+              <p className="font-semibold">Total Parcel Records Processed:</p>
+              <p className="font-semibold">Total Pieces Sampled:</p>
+              <p className="text-gray-600 mt-2">* Actual postage of pieces sampled contains postage for all sampled packages.</p>
+              <p className="text-gray-600">** SOA is calculated as ([Sample]-[Postage-Manifest]-[Postage])/[Manifest-Postage]</p>
+            </div>
+            
+            <h3 className="text-xs font-semibold mb-2">Computation of Statistical Quality Assessment (SOA)</h3>
+            <table className="w-full border border-gray-400 text-xs mb-4">
+              <thead>
+                <tr className="bg-gray-200">
+                  <th className="border border-gray-400 px-2 py-1">Manifest Weight</th>
+                  <th className="border border-gray-400 px-2 py-1">Sample Weight</th>
+                  <th className="border border-gray-400 px-2 py-1">Manifest Postage</th>
+                  <th className="border border-gray-400 px-2 py-1">Sample Postage</th>
+                  <th className="border border-gray-400 px-2 py-1">Manifest Pieces</th>
+                  <th className="border border-gray-400 px-2 py-1">SOA</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td colSpan={6} className="text-center py-4 text-gray-500">No data available</td></tr>
+              </tbody>
+            </table>
+
+            <h3 className="text-xs font-semibold mb-2">Computation of the Package Quality Noncompliance Assessment</h3>
+            <table className="w-full border border-gray-400 text-xs">
+              <thead>
+                <tr className="bg-gray-200">
+                  <th className="border border-gray-400 px-2 py-1">Total Volume Requiring Package Quality Noncompliance</th>
+                  <th className="border border-gray-400 px-2 py-1">Package Quality Noncompliance Metrics</th>
+                  <th className="border border-gray-400 px-2 py-1">Non-Compliant Volume</th>
+                  <th className="border border-gray-400 px-2 py-1">Score</th>
+                  <th className="border border-gray-400 px-2 py-1">Threshold</th>
+                  <th className="border border-gray-400 px-2 py-1">Pieces under Threshold</th>
+                  <th className="border border-gray-400 px-2 py-1">Assessment</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td colSpan={7} className="text-center py-4 text-gray-500">No data available</td></tr>
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {activeTab === 'adjustmentSummary' && (
+          <div className="bg-white border border-gray-400 p-4">
+            <h2 className="text-sm font-semibold mb-3">Live Adjustments</h2>
+            <table className="w-full border border-gray-400 text-xs">
+              <thead>
+                <tr className="bg-gray-200">
+                  <th className="border border-gray-400 px-2 py-1.5 text-left"></th>
+                  <th className="border border-gray-400 px-2 py-1.5 text-center">Pieces</th>
+                  <th className="border border-gray-400 px-2 py-1.5 text-right">Proposed Adjustment</th>
+                  <th className="border border-gray-400 px-2 py-1.5 text-right">Actual Adjustment</th>
+                </tr>
+              </thead>
+              <tbody>
+                {adjustmentData.map((row, idx) => (
+                  <tr key={idx} className={idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                    <td className="border border-gray-400 px-2 py-1.5">{row.type}</td>
+                    <td className="border border-gray-400 px-2 py-1.5 text-center">{row.pieces}</td>
+                    <td className="border border-gray-400 px-2 py-1.5 text-right">{row.proposed}</td>
+                    <td className="border border-gray-400 px-2 py-1.5 text-right">{row.actual}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
