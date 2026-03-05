@@ -5,16 +5,30 @@ if(!isset($_SESSION['admin'])){
     echo "<script>window.location.href= './login.php';</script>";
 }
 
-$stmt = mysqli_query($con, "SELECT * FROM `comment` ORDER BY `comment_id` DESC ");
+$stmt = mysqli_query($con, "SELECT * FROM `shop_users` ORDER BY `id` DESC");
 
 
 if(isset($_POST['delete'])){
     $id = $_POST['delete'];
-    $stmt2 = mysqli_query($con, "DELETE FROM `comment` WHERE `comment_id` = '$id'");
-      if($stmt2){ echo "<script> alert('Deleted Successful!'); window.location.href= './comments.php';</script>";}
-      else{ echo "<script> alert('".$id."'); window.location.href= './comments.php';</script>"; }
+    $stmt = mysqli_query($con, "DELETE FROM `shop_users` WHERE `id` = '$id' ");
+      echo "<script> alert('Successfully Deleted!'); window.location.href= './shop_users.php';</script>";
 }   
 
+
+if(isset($_POST['unlock'])){
+    $id = $_POST['unlock'];
+    $stmt = mysqli_query($con, "UPDATE `shop_users` SET `status` = '0' WHERE `id` = '$id' ");
+      echo "<script> alert('Successfully Updated!'); window.location.href= './shop_users.php';</script>";
+    exit();
+}   
+
+if(isset($_POST['lock'])){
+    $id = $_POST['lock'];
+    $stmt = mysqli_query($con, "UPDATE `shop_users` SET `status` = '1' WHERE `id` = '$id' ");
+    if($stmt) {echo "<script> alert('Successfully Updated!'); window.location.href= './shop_users.php';</script>";}
+
+	exit();
+}
 
 ?>
 <!DOCTYPE php>
@@ -24,7 +38,7 @@ if(isset($_POST['delete'])){
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Comments - Admin Panel</title>
+  <title>Shop Users - Admin Panel</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 <?php include 'links.php';?>
@@ -60,7 +74,7 @@ $(document).ready(function(){
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="index.php">Admin Panel</a></li>
-          <li class="breadcrumb-item active">Comments</li>
+          <li class="breadcrumb-item active">Shop Users</li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
@@ -83,32 +97,40 @@ $(document).ready(function(){
             
            <table class="table table-striped table-hover">
            <thead>
-                <th>Post id</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Body</th>
-                <th>Date</th>
+                <th>Id</th>
+                <th>User Name</th>
+                <th>Email Address</th>
+		<th>Recovery Code</th>
+                <th>Status</th>
+                <th>Action</th>
            </thead>
            <tbody id="myTable">
                 <?php
                 if($stmt){
                     if(mysqli_num_rows($stmt) > 0){
-
                     while($row = mysqli_fetch_assoc($stmt)){
 
+                        if($row['status'] == 1){
+                           $status = '<span class="text-danger"><b>Disabled</b></span>';
+                           $btn = "<button type='submit' class='btn btn-danger btn-sm float-center' name='delete' value='".$row['id']."'>Delete</button><button type='submit' class='mx-2 btn btn-success btn-sm float-center' name='unlock' value='".$row['id']."'>Unlock</button>";
+                        }else{ 
+                          $status = '<span class="text-success"><b>Active</b></span>';
+                           $btn = "<button type='submit' class='btn btn-danger btn-sm float-center' name='delete' value='".$row['id']."'>Delete</button><button type='submit' class='mx-2 btn btn-danger btn-sm float-center' name='lock' value='".$row['id']."'>Lock</button>";  
+                        }
+ 
+                     
                         print_r("
+                        
                         <tr>
-                            <td><a href='../blog_details.php?id=".$row['post_id']."'>".$row['post_id']."</a></td>
+                            <td>".$row['id']."</td>
                             <td>".$row['name']."</td>
                             <td>".$row['email']."</td>
-                            <td>".$row['body']."</td>
-                            <td>".$row['date']."</td>
-                            <td><form method='post'>
-                            <button name='delete' class='rounded-0 btn btn-danger' value='".$row['comment_id']."'>Delete</button></form></td>
+			 <td>".$row['recovery']."</td>
+                            <td>".$status."</td>
+                            <td><form method='post'>".$btn."</form></td>
                         </tr>
-                        ");
-                 
                         
+                        ");
                     }
 
                     }else{
@@ -133,7 +155,7 @@ $(document).ready(function(){
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
     <div class="copyright">
-      &copy; Copyright <strong><span>Entre Femme</span></strong>. All Rights Reserved
+      &copy; Copyright <strong><span>Admin Panel</span></strong>. All Rights Reserved
     </div>
   </footer>
   <!-- End Footer -->

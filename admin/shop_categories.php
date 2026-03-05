@@ -5,16 +5,28 @@ if(!isset($_SESSION['admin'])){
     echo "<script>window.location.href= './login.php';</script>";
 }
 
-$stmt = mysqli_query($con, "SELECT * FROM `comment` ORDER BY `comment_id` DESC ");
+$stmt = mysqli_query($con, "SELECT * FROM `shop_cats` WHERE `status` = '0'");
 
 
 if(isset($_POST['delete'])){
     $id = $_POST['delete'];
-    $stmt2 = mysqli_query($con, "DELETE FROM `comment` WHERE `comment_id` = '$id'");
-      if($stmt2){ echo "<script> alert('Deleted Successful!'); window.location.href= './comments.php';</script>";}
-      else{ echo "<script> alert('".$id."'); window.location.href= './comments.php';</script>"; }
+    $stmt = mysqli_query($con, "UPDATE  `shop_cats` SET `status` = '1' WHERE `id` = '$id' ");
+      echo "<script> alert('Successfully Deleted!'); window.location.href= './shop_categories.php';</script>";
 }   
 
+
+
+if(isset($_POST['new'])){
+
+    $name = $_POST['name'];
+    $stmt = mysqli_query($con, "INSERT INTO  `shop_cats` (`cat_name`, `status`) VALUES('$name',  '0') ");
+      if($stmt) {
+          echo "<script> alert('Successfully Added!'); window.location.href= './shop_categories.php';</script>";
+      }else{
+          echo mysqli_error($con);
+          echo "<script> alert('Failed to Add!'); window.location.href= './shop_categories.php';</script>";
+      }
+} 
 
 ?>
 <!DOCTYPE php>
@@ -24,7 +36,7 @@ if(isset($_POST['delete'])){
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Comments - Admin Panel</title>
+  <title>Categories - Admin Panel</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 <?php include 'links.php';?>
@@ -60,7 +72,7 @@ $(document).ready(function(){
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="index.php">Admin Panel</a></li>
-          <li class="breadcrumb-item active">Comments</li>
+          <li class="breadcrumb-item active">Categories</li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
@@ -77,17 +89,48 @@ $(document).ready(function(){
                     <input id="myInput" type="text" class="form-control col-md-12 float-start" placeholder="Search..">
                 </div>
             <div class="col-lg-6 col-6 mb-3">
-                
+                <!-- Button to Open the Modal -->
+                <button type="button" class="btn btn-primary btn-sm float-end" data-bs-toggle="modal" data-bs-target="#myModal">
+                Add New Category
+                </button>
+
+                    <!-- The Modal -->
+                    <div class="modal" id="myModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">Add New Category</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <form method="POST">
+                                
+                                <div class="form-group my-2">
+                                <input type="text" name="name" class="form-control" placeholder="Type category name" required>
+                                </div>
+
+                                <div class="form-group my-2">
+                                    <input type="submit" class="btn btn-primary btn-sm float-end" name="new" value="Add New">
+                                </div>
+
+                            </form>
+                        </div>
+
+                        </div>
+                    </div>
+                    </div>
             </div>
             </div>
             
            <table class="table table-striped table-hover">
            <thead>
-                <th>Post id</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Body</th>
-                <th>Date</th>
+                <th>Id</th>
+                <th>Category Name</th>
+                <th>Action</th>
            </thead>
            <tbody id="myTable">
                 <?php
@@ -96,19 +139,18 @@ $(document).ready(function(){
 
                     while($row = mysqli_fetch_assoc($stmt)){
 
+                        if($row['status'] == 0){
+                            $btn = "<button type='submit' class='btn btn-danger btn-sm float-center' name='delete' value='".$row['id']."'>Delete</button>";
+                        }
                         print_r("
-                        <tr>
-                            <td><a href='../blog_details.php?id=".$row['post_id']."'>".$row['post_id']."</a></td>
-                            <td>".$row['name']."</td>
-                            <td>".$row['email']."</td>
-                            <td>".$row['body']."</td>
-                            <td>".$row['date']."</td>
-                            <td><form method='post'>
-                            <button name='delete' class='rounded-0 btn btn-danger' value='".$row['comment_id']."'>Delete</button></form></td>
-                        </tr>
-                        ");
-                 
                         
+                        <tr>
+                            <td>".$row['id']."</td>
+                            <td>".$row['cat_name']."</td>
+                            <td><form method='post'>".$btn."</form></td>
+                        </tr>
+                        
+                        ");
                     }
 
                     }else{
@@ -133,7 +175,7 @@ $(document).ready(function(){
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
     <div class="copyright">
-      &copy; Copyright <strong><span>Entre Femme</span></strong>. All Rights Reserved
+      &copy; Copyright <strong><span>Admin Panel</span></strong>. All Rights Reserved
     </div>
   </footer>
   <!-- End Footer -->

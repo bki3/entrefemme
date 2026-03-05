@@ -5,15 +5,30 @@ if(!isset($_SESSION['admin'])){
     echo "<script>window.location.href= './login.php';</script>";
 }
 
-$stmt = mysqli_query($con, "SELECT * FROM `comment` ORDER BY `comment_id` DESC ");
+$facebook = '';
+$twitter = '';
+$instagram = '';
+$stmt = mysqli_query($con, "SELECT * FROM `settings` WHERE `setting_name` = 'whatsapp'");
+if($stmt){
 
+    while($row = mysqli_fetch_assoc($stmt)){
+       $whatsapp = $row['setting_value'];
+    }
+}
 
-if(isset($_POST['delete'])){
-    $id = $_POST['delete'];
-    $stmt2 = mysqli_query($con, "DELETE FROM `comment` WHERE `comment_id` = '$id'");
-      if($stmt2){ echo "<script> alert('Deleted Successful!'); window.location.href= './comments.php';</script>";}
-      else{ echo "<script> alert('".$id."'); window.location.href= './comments.php';</script>"; }
-}   
+if(isset($_POST['update'])){
+
+    $stmt0 = mysqli_query($con, "UPDATE `settings` SET `setting_value` = '".$_POST['whatsapp']."' WHERE `setting_name` = 'whatsapp'");
+     if($stmt0){
+
+        echo "<script>alert('Updated Successful'); window.location.href = './whatsapp.php';</script>";
+    }else{
+        echo "<script>alert('Failed to update '); window.location.href = './whatsapp.php';</script>";
+    }
+   
+
+} // facebook update end here
+
 
 
 ?>
@@ -24,7 +39,7 @@ if(isset($_POST['delete'])){
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Comments - Admin Panel</title>
+  <title>Whatsapp - Admin Panel</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 <?php include 'links.php';?>
@@ -45,7 +60,7 @@ $(document).ready(function(){
 </script>
 
 
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 </head>
 
@@ -60,7 +75,7 @@ $(document).ready(function(){
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="index.php">Admin Panel</a></li>
-          <li class="breadcrumb-item active">Comments</li>
+          <li class="breadcrumb-item active">WhatsApp</li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
@@ -73,54 +88,29 @@ $(document).ready(function(){
           <div class="row">
             
             <div class="row">
-                <div class="col-lg-6 col-6">
-                    <input id="myInput" type="text" class="form-control col-md-12 float-start" placeholder="Search..">
+                <div class="col-lg-12 col-12">
+                    <hr>
+                        <h1 class="text-center">WhatsApp</h1>
+                        <p class="text-center"><b>Note:</b> Always use Country code with WhatsApp Number Ex. (+1123567890)</p>
+                    <hr>
                 </div>
-            <div class="col-lg-6 col-6 mb-3">
+                <div class="col-lg-6 col-6">
+                    <form method="POST">
+                        
+                        <label>WhatsApp Number</label>
+                        <input type="text" class="form-control" value="<?php echo $whatsapp; ?>" name="whatsapp" placeholder="Type WhatsApp Number">
+                        <br>
+                        
+                        <input type="submit" name="update" class="btn btn-info px-5 text-light" value="Update">
+
+                    </form>
+                </div>
+                
                 
             </div>
-            </div>
-            
-           <table class="table table-striped table-hover">
-           <thead>
-                <th>Post id</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Body</th>
-                <th>Date</th>
-           </thead>
-           <tbody id="myTable">
-                <?php
-                if($stmt){
-                    if(mysqli_num_rows($stmt) > 0){
-
-                    while($row = mysqli_fetch_assoc($stmt)){
-
-                        print_r("
-                        <tr>
-                            <td><a href='../blog_details.php?id=".$row['post_id']."'>".$row['post_id']."</a></td>
-                            <td>".$row['name']."</td>
-                            <td>".$row['email']."</td>
-                            <td>".$row['body']."</td>
-                            <td>".$row['date']."</td>
-                            <td><form method='post'>
-                            <button name='delete' class='rounded-0 btn btn-danger' value='".$row['comment_id']."'>Delete</button></form></td>
-                        </tr>
-                        ");
-                 
-                        
-                    }
-
-                    }else{
-                        print_r("<tr><td colspan='5' class='text-center'><b>No Records Found</b></td></tr>");
-                    }
-                    
-                }
-                ?>
-           </tbody>
-           </table>
-
+          
           </div>
+         
         </div><!-- End Left side columns -->
 
         

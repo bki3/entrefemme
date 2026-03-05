@@ -5,14 +5,13 @@ if(!isset($_SESSION['admin'])){
     echo "<script>window.location.href= './login.php';</script>";
 }
 
-$stmt = mysqli_query($con, "SELECT * FROM `comment` ORDER BY `comment_id` DESC ");
+$stmt = mysqli_query($con, "SELECT * FROM `categories` WHERE `id` != '1' ORDER BY `votes` DESC");
 
 
 if(isset($_POST['delete'])){
     $id = $_POST['delete'];
-    $stmt2 = mysqli_query($con, "DELETE FROM `comment` WHERE `comment_id` = '$id'");
-      if($stmt2){ echo "<script> alert('Deleted Successful!'); window.location.href= './comments.php';</script>";}
-      else{ echo "<script> alert('".$id."'); window.location.href= './comments.php';</script>"; }
+    $stmt = mysqli_query($con, "UPDATE `categories` SET `votes` = '0' WHERE `id` = '$id' ");
+      echo "<script> alert('Reset Successful!'); window.location.href= './surveys.php';</script>";
 }   
 
 
@@ -24,7 +23,7 @@ if(isset($_POST['delete'])){
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Comments - Admin Panel</title>
+  <title>Surveys - Admin Panel</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 <?php include 'links.php';?>
@@ -60,7 +59,7 @@ $(document).ready(function(){
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="index.php">Admin Panel</a></li>
-          <li class="breadcrumb-item active">Comments</li>
+          <li class="breadcrumb-item active">Surveys</li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
@@ -83,11 +82,9 @@ $(document).ready(function(){
             
            <table class="table table-striped table-hover">
            <thead>
-                <th>Post id</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Body</th>
-                <th>Date</th>
+                <th>Category</th>
+                <th>Votes</th>
+                <th>Action</th>
            </thead>
            <tbody id="myTable">
                 <?php
@@ -98,13 +95,10 @@ $(document).ready(function(){
 
                         print_r("
                         <tr>
-                            <td><a href='../blog_details.php?id=".$row['post_id']."'>".$row['post_id']."</a></td>
-                            <td>".$row['name']."</td>
-                            <td>".$row['email']."</td>
-                            <td>".$row['body']."</td>
-                            <td>".$row['date']."</td>
+                            <td>".$row['cat_name']."</td>
+                            <td>".$row['votes']."</td>
                             <td><form method='post'>
-                            <button name='delete' class='rounded-0 btn btn-danger' value='".$row['comment_id']."'>Delete</button></form></td>
+                            <button name='delete' class='rounded-0 btn btn-danger' value='".$row['id']."'>Delete</button></form></td>
                         </tr>
                         ");
                  

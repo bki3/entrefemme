@@ -5,14 +5,30 @@ if(!isset($_SESSION['admin'])){
     echo "<script>window.location.href= './login.php';</script>";
 }
 
-$stmt = mysqli_query($con, "SELECT * FROM `comment` ORDER BY `comment_id` DESC ");
+$estmt = mysqli_query($con, "SELECT * FROM `settings` WHERE `setting_name` = 'email'");
+$astmt = mysqli_query($con, "SELECT * FROM `settings` WHERE `setting_name` = 'address'");
+$cstmt = mysqli_query($con, "SELECT * FROM `settings` WHERE `setting_name` = 'contact'");
 
+ if($estmt and $astmt and $cstmt){
+    
+    $erow = mysqli_fetch_assoc($estmt);
+    $arow = mysqli_fetch_assoc($astmt);
+    $crow = mysqli_fetch_assoc($cstmt);
 
-if(isset($_POST['delete'])){
-    $id = $_POST['delete'];
-    $stmt2 = mysqli_query($con, "DELETE FROM `comment` WHERE `comment_id` = '$id'");
-      if($stmt2){ echo "<script> alert('Deleted Successful!'); window.location.href= './comments.php';</script>";}
-      else{ echo "<script> alert('".$id."'); window.location.href= './comments.php';</script>"; }
+}else{
+    print_r("No Records Found");
+}
+
+if(isset($_POST['update'])){
+    extract($_POST);
+    $stmt = mysqli_query($con, "UPDATE `settings` SET `setting_value` = '$email' WHERE `setting_name` = 'email' ");
+    $stmt1 = mysqli_query($con, "UPDATE `settings` SET `setting_value` = '$contact' WHERE `setting_name` = 'contact' ");
+    $stmt2 = mysqli_query($con, "UPDATE `settings` SET `setting_value` = '$address' WHERE `setting_name` = 'address' ");
+    
+    if($stmt and $stmt1 and $stmt2){
+        echo "<script> alert('Updated Successful!'); window.location.href= './contactus.php';</script>";
+    }  
+        
 }   
 
 
@@ -24,7 +40,7 @@ if(isset($_POST['delete'])){
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Comments - Admin Panel</title>
+  <title>Contact us Page - Admin Panel</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 <?php include 'links.php';?>
@@ -60,7 +76,7 @@ $(document).ready(function(){
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="index.php">Admin Panel</a></li>
-          <li class="breadcrumb-item active">Comments</li>
+          <li class="breadcrumb-item active">Contact us</li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
@@ -73,52 +89,24 @@ $(document).ready(function(){
           <div class="row">
             
             <div class="row">
-                <div class="col-lg-6 col-6">
-                    <input id="myInput" type="text" class="form-control col-md-12 float-start" placeholder="Search..">
+                <div class="col-lg-12 col-6">
+                <form method="POST">
+                <label>Email Address:</label>
+                <textarea type="text" class="form-control" rows="5" name="email"><?php echo $erow['setting_value']; ?></textarea>
+                <br>
+                <label>Contact</label>
+                <textarea type="text" class="form-control" rows="5" name="contact"><?php echo $crow['setting_value']; ?></textarea>
+                <br>
+                <label>Address</label>
+                <textarea type="text" class="form-control" rows="5" name="address"><?php echo $arow['setting_value']; ?></textarea>
+                <br>
+                <input type="submit" class="btn btn-danger px-5 rounded-0 btn-sm" value="Update" name="update">
+                </form>
                 </div>
             <div class="col-lg-6 col-6 mb-3">
                 
             </div>
             </div>
-            
-           <table class="table table-striped table-hover">
-           <thead>
-                <th>Post id</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Body</th>
-                <th>Date</th>
-           </thead>
-           <tbody id="myTable">
-                <?php
-                if($stmt){
-                    if(mysqli_num_rows($stmt) > 0){
-
-                    while($row = mysqli_fetch_assoc($stmt)){
-
-                        print_r("
-                        <tr>
-                            <td><a href='../blog_details.php?id=".$row['post_id']."'>".$row['post_id']."</a></td>
-                            <td>".$row['name']."</td>
-                            <td>".$row['email']."</td>
-                            <td>".$row['body']."</td>
-                            <td>".$row['date']."</td>
-                            <td><form method='post'>
-                            <button name='delete' class='rounded-0 btn btn-danger' value='".$row['comment_id']."'>Delete</button></form></td>
-                        </tr>
-                        ");
-                 
-                        
-                    }
-
-                    }else{
-                        print_r("<tr><td colspan='5' class='text-center'><b>No Records Found</b></td></tr>");
-                    }
-                    
-                }
-                ?>
-           </tbody>
-           </table>
 
           </div>
         </div><!-- End Left side columns -->
